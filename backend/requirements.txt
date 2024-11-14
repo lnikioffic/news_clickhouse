@@ -1,0 +1,10 @@
+asynch==0.2.5
+clickhouse-driver==0.2.9
+clickhouse-sqlalchemy==0.3.2
+email_validator==2.2.0
+fastapi==0.115.4
+pydantic
+pydantic_core
+pydantic-settings
+SQLAlchemy==2.0.36
+uvicorn

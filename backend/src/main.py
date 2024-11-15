@@ -9,7 +9,7 @@ app.include_router(router_news)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://localhost:8000",
+        "*",
     ],
     allow_credentials=True,
     allow_methods=["*"],

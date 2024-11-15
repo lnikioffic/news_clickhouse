@@ -1,36 +1,29 @@
 <script setup lang="ts">
-import type News from '@/models/News'
-import { onMounted, useTemplateRef, defineEmits, ref } from 'vue'
-import { getNewsById } from '@/services/newsService'
+import { onMounted, useTemplateRef, defineEmits, reactive } from 'vue'
+// types
+import type NewsBase from '@/models/NewsBase'
 
 const emits = defineEmits(['closeCardForm', 'saveCardForm'])
-const props = defineProps({
-  newsId: { type: String, required: true },
-})
 
-const modalRef = useTemplateRef('modal')
-const newsItem = ref<News>({
-  uuid: '',
+const newNews: NewsBase = reactive({
   text: '',
   title: '',
-  created_at: '',
-  updated_at: '',
 })
+const modalRef = useTemplateRef('modal')
 
-onMounted(async () => {
+onMounted(() => {
   document.body.style.overflow = 'hidden'
   if (modalRef.value) modalRef.value.style.top = `${window.scrollY + window.innerHeight * 0.25}px`
-  newsItem.value = await getNewsById(props.newsId)
 })
 
 const closeCard = () => {
   document.body.style.overflow = ''
-  emits('closeCardForm', '')
+  emits('closeCardForm', null)
 }
 
 const saveCard = () => {
   document.body.style.overflow = ''
-  emits('saveCardForm', newsItem.value)
+  emits('saveCardForm', newNews)
 }
 </script>
 
@@ -54,7 +47,7 @@ const saveCard = () => {
         class="border hover:border-black focus:border-black transition-all outline-none rounded-md w-full placeholder:italic py-1 px-3"
         placeholder="Заголовок статьи..."
         type="text"
-        v-model="newsItem.title"
+        v-model="newNews.title"
       />
     </div>
 
@@ -64,7 +57,7 @@ const saveCard = () => {
         class="placeholder:italic border hover:border-black focus:border-black transition-all outline-none rounded-md w-full py-1 px-3"
         rows="5"
         placeholder="Текст статьи..."
-        v-model="newsItem.text"
+        v-model="newNews.text"
       ></textarea>
     </div>
 

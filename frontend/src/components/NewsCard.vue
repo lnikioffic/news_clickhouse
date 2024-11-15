@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { getDateString } from '@/services/dateHelper'
 // types
 import type { PropType } from 'vue'
 import type News from '@/models/News'
@@ -23,8 +24,10 @@ const cropText = (text: string, maxLength: number): string => {
     >
       <div class="transition-all w-full">
         <h2 class="font-bold uppercase text-xl">{{ news.title }}</h2>
-        <hr class="border-1 border-black mt-1 w-full"/>
-        <div class="mt-2 font-medium">{{ news.date }} / {{ news.author }}</div>
+        <hr class="border-1 border-black mt-1 w-full" />
+        <div class="mt-2 font-medium">
+          {{ getDateString(news.created_at) }} / {{ getDateString(news.updated_at) }}
+        </div>
         <p class="break-words mt-3">{{ cropText(news.text, TEXT_MAX_LENGTH) }}</p>
       </div>
 
@@ -34,21 +37,21 @@ const cropText = (text: string, maxLength: number): string => {
         <button
           class="bg-black text-white py-2 px-2.5 rounded-md"
           title="Открыть новость"
-          @click="() => emits('showNews', news)"
+          @click="() => emits('showNews', news.uuid)"
         >
           <i class="fa-solid fa-magnifying-glass"></i>
         </button>
         <button
           class="bg-black text-white py-2 px-2.5 rounded-md"
           title="Редактировать новость"
-          @click="() => emits('editNews', news)"
+          @click="() => emits('editNews', news.uuid)"
         >
           <i class="fa-solid fa-pen"></i>
         </button>
         <button
           class="bg-black text-white py-2 px-2.5 rounded-md"
           title="Удалить новость"
-          @click="() => emits('removeNews', news.id)"
+          @click="() => emits('removeNews', news.uuid)"
         >
           <i class="fa-solid fa-trash"></i>
         </button>

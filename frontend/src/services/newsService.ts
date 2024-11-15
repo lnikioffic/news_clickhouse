@@ -1,28 +1,31 @@
-import type News from "@/models/News";
+import axios from 'axios';
 
-export function getNews(): Array<News> {
-    const arr: Array<News> = []
+//models
+import type News from '@/models/News';
+import type NewsBase from '@/models/NewsBase';
 
-    for (let i = 0; i < 20; i++)
-        arr.push({
-            id: `${i}`,
-            title: `Title № ${i + 1}`,
-            text: '13',
-            author: 'Ivan',
-            date: '10.11.2024'
-        })
+const SERVER_URL = '/api/news'
 
-    return arr
-}
-// Curabitur arcu erat, accumsan id imperdiet et, porttitor at sem. Donec rutrum congue leo eget malesuada.
-export function updateNews(news: News) {
-
+export async function getNews(): Promise<Array<News>> {
+    const { data } = await axios.get(SERVER_URL)
+    return data
 }
 
-export function remoeNews(news: News) {
-
+export async function getNewsById(id: string): Promise<News> {
+    const { data } = await axios(`${SERVER_URL}/${id}`)
+    return data
 }
 
-export function createNews(news: News): News {
-    return { ...news, id: '130', date: '13.13.2024' }
+export async function createNews(news: NewsBase): Promise<News> {
+    const { data } = await axios.post(SERVER_URL, news)
+    return data
+}
+
+export async function remoeNews(id: string): Promise<void> {
+    await axios.delete(`${SERVER_URL}/${id}`)
+}
+
+export async function updateNews(news: News): Promise<News> {
+    const { data } = await axios.put(`${SERVER_URL}/${news.uuid}`, news)
+    return data
 }

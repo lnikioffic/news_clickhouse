@@ -1,7 +1,7 @@
-export default interface News {
-    id: string,
-    title: string,
-    text: string,
-    date: string,
-    author: string
+import NewsBase from "./NewsBase"
+
+export default interface News extends NewsBase {
+    uuid: string,
+    created_at: string,
+    updated_at: string
 }

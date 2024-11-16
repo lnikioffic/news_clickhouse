@@ -26,6 +26,6 @@ export async function remoeNews(id: string): Promise<void> {
 }
 
 export async function updateNews(news: News): Promise<News> {
-    const { data } = await axios.put(`${SERVER_URL}/${news.uuid}`, news)
+    const { data } = await axios.put(`${SERVER_URL}/${news.uuid}`, news as NewsBase)
     return data
 }

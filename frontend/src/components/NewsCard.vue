@@ -4,7 +4,7 @@ import { getDateString } from '@/services/dateHelper'
 import type { PropType } from 'vue'
 import type News from '@/models/News'
 
-const TEXT_MAX_LENGTH = 95
+const TEXT_MAX_LENGTH = 70
 
 defineProps({
   news: { type: Object as PropType<News>, required: true },
@@ -20,9 +20,9 @@ const cropText = (text: string, maxLength: number): string => {
 <template>
   <div>
     <div
-      class="border group px-4 py-6 rounded-md hover:border-black transition-all select-none flex overflow-hidden"
+      class="border group px-4 py-6 rounded-md hover:border-black transition-all select-none flex justify-between"
     >
-      <div class="transition-all w-full">
+      <div class="transition-all" style="width: 83%">
         <h2 class="font-bold uppercase text-xl">{{ news.title }}</h2>
         <hr class="border-1 border-black mt-1 w-full" />
         <div class="mt-2 font-medium">
@@ -31,30 +31,30 @@ const cropText = (text: string, maxLength: number): string => {
         <p class="break-words mt-3">{{ cropText(news.text, TEXT_MAX_LENGTH) }}</p>
       </div>
 
-      <div
-        class="test flex flex-col opacity-0 justify-center ml-7 gap-y-3 transition-all invisible w-0 group-hover: group-hover:visible group-hover:w-fit group-hover:opacity-100"
-      >
-        <button
-          class="bg-black text-white py-2 px-2.5 rounded-md"
-          title="Открыть новость"
-          @click="() => emits('showNews', news.uuid)"
-        >
-          <i class="fa-solid fa-magnifying-glass"></i>
-        </button>
-        <button
-          class="bg-black text-white py-2 px-2.5 rounded-md"
-          title="Редактировать новость"
-          @click="() => emits('editNews', news.uuid)"
-        >
-          <i class="fa-solid fa-pen"></i>
-        </button>
-        <button
-          class="bg-black text-white py-2 px-2.5 rounded-md"
-          title="Удалить новость"
-          @click="() => emits('removeNews', news.uuid)"
-        >
-          <i class="fa-solid fa-trash"></i>
-        </button>
+      <div style="width: 15%" class="flex justify-end">
+        <div class="flex flex-col justify-center gap-y-3 w-fit">
+          <button
+            class="bg-black text-white py-2 px-2.5 rounded-md"
+            title="Открыть новость"
+            @click="() => emits('showNews', news.uuid)"
+          >
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </button>
+          <button
+            class="bg-black text-white py-2 px-2.5 rounded-md"
+            title="Редактировать новость"
+            @click="() => emits('editNews', news.uuid)"
+          >
+            <i class="fa-solid fa-pen"></i>
+          </button>
+          <button
+            class="bg-black text-white py-2 px-2.5 rounded-md"
+            title="Удалить новость"
+            @click="() => emits('removeNews', news.uuid)"
+          >
+            <i class="fa-solid fa-trash"></i>
+          </button>
+        </div>
       </div>
     </div>
   </div>

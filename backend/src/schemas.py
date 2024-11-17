@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from datetime import datetime
 
 
@@ -8,6 +8,8 @@ class NewsBase(BaseModel):
 
 
 class NewsRead(NewsBase):
+    model_config = ConfigDict(from_attributes=True)
+    
     uuid: str
     created_at: datetime
     updated_at: datetime

@@ -2,7 +2,6 @@ from sqlalchemy import UniqueConstraint, func, ForeignKey
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from clickhouse_sqlalchemy import engines
 from src.database import DATABASE
-import uuid
 from datetime import datetime
 
 

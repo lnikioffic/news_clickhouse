@@ -22,5 +22,5 @@ def valid_news_id(
 
 
 def get_newses(service: Annotated[NewsService, Depends()]) -> list[NewsRead]:
-    newses = service.get_newses()
+    newses = service.get_news()
     return newses

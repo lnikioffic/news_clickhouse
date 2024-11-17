@@ -1,6 +1,6 @@
 from fastapi import Depends
 from typing import Annotated
-from sqlalchemy import select
+from sqlalchemy import delete, select
 from sqlalchemy.engine import Result
 from sqlalchemy.orm import Session
 from src.database import db
@@ -10,7 +10,7 @@ from src.schemas import NewsRead, NewsCreate, NewsUpdate
 
 
 class NewsService:
-    def __init__(self, session: Annotated[Session, Depends(db.get_session)]):
+    def __init__(self, session: Annotated[Session, Depends(db.get_session)]) -> None:
         self.session = session
 
     def get_news(self) -> list[NewsRead]:
@@ -30,8 +30,19 @@ class NewsService:
         return add_news
 
     def update_news(self, news: NewsRead, news_update: NewsUpdate) -> NewsRead:
+        news_update = news_update.model_dump()
         for key, value in news_update.items():
             if value != None:
                 setattr(news, key, value)
         self.session.commit()
         return news
+
+    def delete_news(self, uuid: str) -> None:
+        try:
+            stmt = delete(News).filter(News.uuid == uuid)
+            self.session.execute(stmt)
+            self.session.commit()
+            return 'success'
+        except Exception as ex:
+            self.session.rollback()
+            return f'excption {ex}'

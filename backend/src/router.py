@@ -34,5 +34,9 @@ def update_news(
 
 
 @router.delete('/{news_id}')
-def delete_news(news: Annotated[NewsRead, Depends(valid_news_id)]):
-    pass
+def delete_news(
+    news: Annotated[NewsRead, Depends(valid_news_id)],
+    service: Annotated[NewsService, Depends()],
+):
+    me = service.delete_news(news.uuid)
+    return {'message': me}

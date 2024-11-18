@@ -35,6 +35,8 @@ class NewsService:
             if value != None:
                 setattr(news, key, value)
         self.session.commit()
+        self.session.refresh(news)
+        self.session.expire_all()
         return news
 
     def delete_news(self, uuid: str) -> None:

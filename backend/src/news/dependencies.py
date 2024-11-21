@@ -1,7 +1,7 @@
 from typing import Annotated
 from fastapi import Depends, HTTPException, Path, status
-from src.schemas import NewsRead
-from src.service import NewsService
+from src.news.schemas import NewsRead
+from src.news.service import NewsService
 
 
 error_found = HTTPException(

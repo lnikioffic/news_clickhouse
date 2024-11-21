@@ -1,5 +1,6 @@
 from pydantic import BaseModel, ConfigDict, Field
 from datetime import datetime
+from src.tags.schemas import TagsRead
 
 
 class NewsBase(BaseModel):
@@ -9,14 +10,15 @@ class NewsBase(BaseModel):
 
 class NewsRead(NewsBase):
     model_config = ConfigDict(from_attributes=True)
-    
+
     uuid: str
+    tags: TagsRead
     created_at: datetime
     updated_at: datetime
 
 
 class NewsCreate(NewsBase):
-    pass
+    tags_uuid: str
 
 
 class NewsUpdate(NewsCreate):

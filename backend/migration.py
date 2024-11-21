@@ -1,6 +1,7 @@
 from sqlalchemy import text
 from src.database import db, DATABASE
-from src.models import News, Tags, News_Tags
+from src.news.models import News
+from src.tags.models import Tags
 
 
 with db.engine.connect() as connection:
@@ -14,10 +15,5 @@ except:
 
 try:
     Tags().__table__.create(db.engine)
-except:
-    print('уже создано')
-
-try:
-    News_Tags().__table__.create(db.engine)
 except:
     print('уже создано')

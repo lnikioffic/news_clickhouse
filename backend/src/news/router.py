@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends
 from typing import Annotated
-from src.schemas import NewsRead, NewsCreate, NewsUpdate
-from src.dependencies import get_newses, valid_news_id
-from src.service import NewsService
+from src.news.schemas import NewsRead, NewsCreate, NewsUpdate
+from src.news.dependencies import get_newses, valid_news_id
+from src.news.service import NewsService
 
 router = APIRouter(prefix='/news', tags=['news'])
 

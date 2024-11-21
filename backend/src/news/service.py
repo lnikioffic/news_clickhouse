@@ -18,8 +18,21 @@ class NewsService(Service):
             """
         )
         result: Result = self.session.execute(stmt)
-        # news_list = []
-        res = [data for data in result.scalars().all()]
+        news_list = []
+        res = result.fetchall()
+        for r in res:
+            news_item = NewsRead(
+                title=r[0],
+                text=r[1],
+                uuid=r[2],
+                created_at=r[3],
+                updated_at=r[4],
+                tags=TagsRead(
+                    name=r[6],
+                    uuid=r[5]
+                )
+            )
+            news_list.append(news_item)
         # for row in res:
         #     news_item = NewsRead(
         #         title=row[0],
@@ -30,7 +43,7 @@ class NewsService(Service):
         #         tags=TagsRead(row[5], row[6]),  # Создаем список тегов
         #     )
         #     news_list.append(news_item)
-        return result
+        return news_list
 
     def get_news_by_id(self, uuid: str) -> NewsRead:
         news = self.session.get(News, uuid)

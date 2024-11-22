@@ -14,3 +14,7 @@ class TagsRead(TagsBase):
 
 class TagsCreate(TagsBase):
     pass
+
+
+class TagsUpdate(TagsCreate):
+    pass

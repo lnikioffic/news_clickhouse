@@ -1,8 +1,7 @@
-from sqlalchemy import delete, select, join, text
+from sqlalchemy import delete, text
 from sqlalchemy.engine import Result
 from uuid import uuid4
 from src.news.models import News
-from src.tags.models import Tags
 from src.news.schemas import NewsRead, NewsCreate, NewsUpdate
 from src.tags.schemas import TagsRead
 from src.service import Service
@@ -10,7 +9,6 @@ from src.service import Service
 
 class NewsService(Service):
     def get_news(self) -> list[NewsRead]:
-        # stmt = select(News).join(Tags, News.tags_uuid == Tags.uuid)
         stmt = text(
             """
                 SELECT title, text, uuid, created_at, updated_at, tags.uuid, tags.name FROM news_house.news 
@@ -33,27 +31,36 @@ class NewsService(Service):
                 )
             )
             news_list.append(news_item)
-        # for row in res:
-        #     news_item = NewsRead(
-        #         title=row[0],
-        #         text=row[1],
-        #         uuid=row[2],
-        #         created_at=row[3],
-        #         updated_at=row[4],
-        #         tags=TagsRead(row[5], row[6]),  # Создаем список тегов
-        #     )
-        #     news_list.append(news_item)
         return news_list
 
     def get_news_by_id(self, uuid: str) -> NewsRead:
-        news = self.session.get(News, uuid)
+        stmt = text(
+            f"""SELECT title, text, uuid, created_at, updated_at, tags.uuid, tags.name FROM news_house.news 
+            JOIN news_house.tags ON news.tags_uuid = tags.uuid
+            WHERE news.uuid = '{uuid}'
+            """
+            )
+        result: Result = self.session.execute(stmt)
+        res = result.fetchone()
+        news = NewsRead(
+            title=res[0],
+            text=res[1],
+            uuid=res[2],
+            created_at=res[3],
+            updated_at=res[4],
+            tags=TagsRead(
+                name=res[6],
+                uuid=res[5]
+            )
+        )
         return news
 
     def create_news(self, news: NewsCreate) -> NewsRead:
         add_news = News(**news.model_dump(), uuid=str(uuid4()))
         self.session.add(add_news)
         self.session.commit()
-        return add_news
+        new_news = self.get_news_by_id(add_news.uuid)
+        return new_news
 
     def update_news(self, news: NewsRead, news_update: NewsUpdate) -> NewsRead:
         news_update = news_update.model_dump()
@@ -63,7 +70,8 @@ class NewsService(Service):
         self.session.commit()
         self.session.refresh(news)
         self.session.expire_all()
-        return news
+        new_news = self.get_news_by_id(news.uuid)
+        return new_news
 
     def delete_news(self, uuid: str) -> None:
         try:

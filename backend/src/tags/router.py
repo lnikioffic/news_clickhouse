@@ -8,7 +8,7 @@ router = APIRouter(prefix='/tags', tags=['tags'])
 
 @router.get('/', response_model=list[TagsRead])
 def get_news(service: Annotated[TagsService, Depends()]):
-    tags = service.get_tegs()
+    tags = service.get_tags()
     return tags
 
 

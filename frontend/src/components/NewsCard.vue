@@ -24,7 +24,9 @@ const cropText = (text: string, maxLength: number): string => {
       class="border group px-4 py-6 rounded-md hover:border-black transition-all select-none flex justify-between overflow-hidden"
     >
       <div class="transition-all" style="width: 83%">
-        <h2 class="font-bold uppercase text-xl">{{ cropText(news.title, TITLE_MAX_LENGTH) }}</h2>
+        <h2 class="font-bold uppercase text-xl overflow-hidden whitespace-nowrap text-ellipsis">
+          {{ news.title }}
+        </h2>
         <hr class="border-1 border-black mt-1 w-full" />
         <div class="mt-2 font-medium">
           {{ getDateString(news.updated_at) }} / {{ news.tags.name }}

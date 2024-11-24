@@ -7,20 +7,45 @@ import NewsCard from '@/components/NewsCard.vue'
 import CreateNewsCardForm from './components/CreateNewsCardForm.vue'
 import ShowNewsCardForm from '@/components/ShowNewsCardForm.vue'
 import EditNewsCardForm from '@/components/EditNewsCardForm.vue'
+import CreateTagForm from './components/CreateTagForm.vue'
 //services
 import { getNews, createNews, remoeNews, updateNews } from '@/services/newsService'
+import { createTag, getTags } from '@/services/tagsService'
 // types
 import type News from '@/models/News'
 import type NewsBase from './models/NewsBase'
+import type TagBase from './models/TagBase'
+import type Tag from './models/Tag'
 
 // refs
+const currentFilter = ref('all')
 const newsArr: Ref<Array<News>> = ref([])
+const tags: Ref<Array<Tag>> = ref([])
 
 onMounted(async () => {
-  newsArr.value = await getNews()
+  // newsArr.value = await getNews(currentFilter.value)
+  // tags.value = await getTags()
 })
 
-//create form
+// filter
+const onChangeFilter = async () => {
+  newsArr.value = await getNews(currentFilter.value)
+}
+
+// create tag form
+const isVisibleCreateTagCardForm: Ref<boolean> = ref(false)
+
+const onCreateTagFormVisible = () => {
+  isVisibleCreateTagCardForm.value = !isVisibleCreateTagCardForm.value
+}
+
+const onCreateTagItem = async (tagItem: TagBase) => {
+  const newTag = await createTag(tagItem)
+  tags.value.push(newTag)
+  onCreateTagFormVisible()
+}
+
+//create news form
 const isVisibleCreateNewsCardForm: Ref<boolean> = ref(false)
 
 const onCreateNewsFormVisible = () => {
@@ -33,7 +58,7 @@ const onCreateNewsItem = async (newsItem: NewsBase) => {
   onCreateNewsFormVisible()
 }
 
-//show form
+//show news form
 const isVisibleShowNewsCardForm: Ref<boolean> = ref(false)
 const showNewsItemId: Ref<string> = ref('')
 
@@ -42,14 +67,14 @@ const onShowNewsItem = (newsItemId: string) => {
   isVisibleShowNewsCardForm.value = !isVisibleShowNewsCardForm.value
 }
 
-// remove
+// remove news
 const onRemoveNewsItem = async (id: string) => {
   await remoeNews(id)
   const newsIdx = newsArr.value.findIndex((x) => x.uuid === id)
   newsArr.value.splice(newsIdx, 1)
 }
 
-// edit form
+// edit news form
 const isVisibleEditNewsCardForm: Ref<boolean> = ref(false)
 const editNewsItemId: Ref<string> = ref('')
 
@@ -66,11 +91,25 @@ const onEditNewsItem = async (newsItem: News) => {
 }
 </script>
 <template>
-  <Header @createNews="onCreateNewsFormVisible"></Header>
+  <Header @createNews="onCreateNewsFormVisible" @createTag="onCreateTagFormVisible"></Header>
 
   <div class="container mt-16">
     <div>
-      <h1 class="font-bold text-center text-4xl select-none">#ОСНОВНЫЕ НОВОСТИ</h1>
+      <div class="flex justify-between items-center">
+        <h1 class="font-bold text-4xl select-none">#ОСНОВНЫЕ НОВОСТИ</h1>
+
+        <div class="flex gap-x-3 items-center">
+          <p class="font-bold text-lg">Категория:</p>
+          <select
+            class="border py-1 px-2 rounded-md outline-none hover:border-black"
+            v-model="currentFilter"
+            @change="onChangeFilter"
+          >
+            <option value="all" selected>Все</option>
+            <option :value="tag.uuid" v-for="tag in tags">{{ tag.name }}</option>
+          </select>
+        </div>
+      </div>
 
       <div class="mt-16 mb-20 grid grid-cols-3 gap-y-10 gap-x-14">
         <NewsCard
@@ -102,5 +141,11 @@ const onEditNewsItem = async (newsItem: News) => {
       @closeCardForm="() => onEditNewsFormVisible('')"
       @saveCardForm="onEditNewsItem"
     ></EditNewsCardForm>
+
+    <CreateTagForm
+      v-if="isVisibleCreateTagCardForm"
+      @closeCardForm="onCreateTagFormVisible"
+      @saveCardForm="onCreateTagItem"
+    ></CreateTagForm>
   </div>
 </template>

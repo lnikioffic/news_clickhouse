@@ -1,15 +1,16 @@
 from fastapi import APIRouter, Depends
 from typing import Annotated
 from src.news.schemas import NewsRead, NewsCreate, NewsUpdate
-from src.news.dependencies import get_newses, valid_news_id
+from src.news.dependencies import valid_news_id
 from src.news.service import NewsService
 
 router = APIRouter(prefix='/news', tags=['news'])
 
 
 @router.get('/', response_model=list[NewsRead])
-def get_news(newses: Annotated[list[NewsRead], Depends(get_newses)]):
-    return newses
+def get_news(uuid_tag: str, service: Annotated[NewsService, Depends()]):
+    news = service.get_news(uuid_tag)
+    return news
 
 
 @router.post('/', response_model=NewsRead)

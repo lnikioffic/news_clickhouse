@@ -1,3 +1,3 @@
 export default interface TagBase {
-    uuid: string
+    name: string
 }

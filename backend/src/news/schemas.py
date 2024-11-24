@@ -15,6 +15,7 @@ class NewsRead(NewsBase):
     tags: TagsRead
     created_at: datetime
     updated_at: datetime
+    tags_uuid: str
 
 
 class NewsCreate(NewsBase):

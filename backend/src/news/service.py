@@ -37,7 +37,8 @@ class NewsService(Service):
                 tags=TagsRead(
                     name=r[6],
                     uuid=r[5]
-                )
+                ),
+                tags_uuid=r[7]
             )
             news_list.append(news_item)
         return news_list
@@ -45,11 +46,11 @@ class NewsService(Service):
     def get_news_by_id(self, uuid: str) -> NewsRead:
         stmt = text(
             f"""
-            SELECT title, text, uuid, created_at, updated_at, tags.uuid, tags.name FROM news_house.news 
+            SELECT title, text, uuid, created_at, updated_at, tags.uuid, tags.name, tags_uuid FROM news_house.news 
             JOIN news_house.tags ON news.tags_uuid = tags.uuid
-            WHERE news.uuid = '{uuid}'
+            WHERE news.uuid = '{uuid}';
             """
-            )
+        )
         result: Result = self.session.execute(stmt)
         res = result.fetchone()
         news = NewsRead(
@@ -61,7 +62,8 @@ class NewsService(Service):
             tags=TagsRead(
                 name=res[6],
                 uuid=res[5]
-            )
+            ),
+            tags_uuid=res[7]
         )
         return news
 
@@ -74,11 +76,12 @@ class NewsService(Service):
 
     def update_news(self, news: NewsRead, news_update: NewsUpdate) -> NewsRead:
         news_update = news_update.model_dump()
+        news_d = self.session.get(News, news.uuid)
         for key, value in news_update.items():
             if value != None:
-                setattr(news, key, value)
+                setattr(news_d, key, value)
         self.session.commit()
-        self.session.refresh(news)
+        self.session.refresh(news_d)
         self.session.expire_all()
         new_news = self.get_news_by_id(news.uuid)
         return new_news

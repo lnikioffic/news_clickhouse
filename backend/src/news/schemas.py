@@ -4,7 +4,7 @@ from src.tags.schemas import TagsRead
 
 
 class NewsBase(BaseModel):
-    title: str = Field(min_length=6, max_length=100)
+    title: str = Field(min_length=6)
     text: str = Field(min_length=20)
 
 

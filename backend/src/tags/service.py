@@ -17,13 +17,13 @@ class TagsService(Service):
         tag = self.session.get(Tags, uuid)
         return tag
 
-    def create_tags(self, news: TagsCreate) -> TagsRead:
-        add_tags = Tags(**news.model_dump(), uuid=str(uuid4()))
+    def create_tags(self, tag: TagsCreate) -> TagsRead:
+        add_tags = Tags(**tag.model_dump(), uuid=str(uuid4()))
         self.session.add(add_tags)
         self.session.commit()
         return add_tags
 
-    def update_news(self, tag: TagsRead, tag_update: TagsUpdate) -> TagsRead:
+    def update_tag(self, tag: TagsRead, tag_update: TagsUpdate) -> TagsRead:
         tag_update = tag_update.model_dump()
         for key, value in tag_update.items():
             if value != None:

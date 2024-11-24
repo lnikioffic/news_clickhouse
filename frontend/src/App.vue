@@ -23,8 +23,8 @@ const newsArr: Ref<Array<News>> = ref([])
 const tags: Ref<Array<Tag>> = ref([])
 
 onMounted(async () => {
-  // newsArr.value = await getNews(currentFilter.value)
-  // tags.value = await getTags()
+  newsArr.value = await getNews(currentFilter.value)
+  tags.value = await getTags()
 })
 
 // filter

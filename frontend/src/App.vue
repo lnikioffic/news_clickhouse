@@ -54,7 +54,8 @@ const onCreateNewsFormVisible = () => {
 
 const onCreateNewsItem = async (newsItem: NewsBase) => {
   const newNews: News = await createNews(newsItem)
-  newsArr.value.push(newNews)
+  if (currentFilter.value === 'all' || newNews.tags.uuid === currentFilter.value)
+    newsArr.value.push(newNews)
   onCreateNewsFormVisible()
 }
 

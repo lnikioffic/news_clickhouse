@@ -7,7 +7,7 @@ import type NewsBase from '@/models/NewsBase';
 const SERVER_URL = '/api/news'
 
 export async function getNews(filter: string): Promise<Array<News>> {
-    const { data } = await axios.get(SERVER_URL)
+    const { data } = await axios.get(`${SERVER_URL}?uuid_tag=${filter}`)
     return data
 }
 

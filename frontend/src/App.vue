@@ -87,7 +87,9 @@ const onEditNewsFormVisible = (newsItemId: string) => {
 const onEditNewsItem = async (newsItem: News) => {
   const updatedNewsItem = await updateNews(newsItem)
   const newsIdx = newsArr.value.findIndex((x) => x.uuid === newsItem.uuid)
-  newsArr.value[newsIdx] = updatedNewsItem
+  if (currentFilter.value === 'all' || newsItem.tags.uuid === currentFilter.value)
+    newsArr.value[newsIdx] = updatedNewsItem
+  else newsArr.value.splice(newsIdx, 1)
   onEditNewsFormVisible('')
 }
 </script>

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-const emit = defineEmits(['createNews'])
+const emit = defineEmits(['createNews', 'createTag'])
 </script>
 
 <template>
@@ -7,14 +7,20 @@ const emit = defineEmits(['createNews'])
     <div class="container flex justify-between">
       <h1 class="text-3xl font-bold und">#CRUD News</h1>
 
-      <button
-        class="text-lg"
-        type="button"
-        title="Добавить новость"
-        @click="() => emit('createNews', null)"
-      >
-        <i class="fa-solid fa-plus"></i>
-      </button>
+      <div class="flex gap-x-6">
+        <button class="text-lg" type="button" title="Добавить тег" @click="() => emit('createTag')">
+          <i class="fa-solid fa-plus"></i>
+        </button>
+
+        <button
+          class="text-lg"
+          type="button"
+          title="Добавить новость"
+          @click="() => emit('createNews')"
+        >
+          <i class="fa-solid fa-file-circle-plus"></i>
+        </button>
+      </div>
     </div>
   </header>
 </template>

@@ -6,7 +6,7 @@ import type NewsBase from '@/models/NewsBase';
 
 const SERVER_URL = '/api/news'
 
-export async function getNews(): Promise<Array<News>> {
+export async function getNews(filter: string): Promise<Array<News>> {
     const { data } = await axios.get(SERVER_URL)
     return data
 }

@@ -1,19 +1,26 @@
 <script setup lang="ts">
-import { onMounted, useTemplateRef, defineEmits, reactive } from 'vue'
+import { onMounted, useTemplateRef, defineEmits, reactive, ref, type Ref } from 'vue'
+import { getTags } from '@/services/tagsService'
 // types
 import type NewsBase from '@/models/NewsBase'
+import type Tag from '@/models/Tag'
 
 const emits = defineEmits(['closeCardForm', 'saveCardForm'])
+const tags: Ref<Array<Tag>> = ref([])
+const selectedTag = ref(null)
 
 const newNews: NewsBase = reactive({
   text: '',
   title: '',
+  tags: null,
 })
 const modalRef = useTemplateRef('modal')
 
-onMounted(() => {
+onMounted(async () => {
   document.body.style.overflow = 'hidden'
   if (modalRef.value) modalRef.value.style.top = `${window.scrollY + window.innerHeight * 0.25}px`
+  tags.value = await getTags()
+  if (tags.value?.length > 0) selectedTag.value = tags.value[0].uuid
 })
 
 const closeCard = () => {
@@ -23,6 +30,7 @@ const closeCard = () => {
 
 const saveCard = () => {
   document.body.style.overflow = ''
+  newNews.tags = tags.value.find((x) => x.uuid === selectedTag.value)
   emits('saveCardForm', newNews)
 }
 </script>
@@ -49,6 +57,16 @@ const saveCard = () => {
         type="text"
         v-model="newNews.title"
       />
+    </div>
+
+    <div class="flex items-center gap-x-3">
+      <h4 class="font-bold text-xl select-none">#Тег</h4>
+      <select
+        class="border py-1 px-2 rounded-md outline-none hover:border-black"
+        v-model="selectedTag"
+      >
+        <option :value="tag.uuid" v-for="tag in tags">{{ tag.name }}</option>
+      </select>
     </div>
 
     <div>

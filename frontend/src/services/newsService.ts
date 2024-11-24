@@ -17,7 +17,7 @@ export async function getNewsById(id: string): Promise<News> {
 }
 
 export async function createNews(news: NewsBase): Promise<News> {
-    const { data } = await axios.post(SERVER_URL, news)
+    const { data } = await axios.post(SERVER_URL, { ...news, tags_uuid: news.tags?.uuid })
     return data
 }
 
@@ -26,6 +26,6 @@ export async function remoeNews(id: string): Promise<void> {
 }
 
 export async function updateNews(news: News): Promise<News> {
-    const { data } = await axios.put(`${SERVER_URL}/${news.uuid}`, news as NewsBase)
+    const { data } = await axios.put(`${SERVER_URL}/${news.uuid}`, { ...news, tags_uuid: news.tags?.uuid })
     return data
 }

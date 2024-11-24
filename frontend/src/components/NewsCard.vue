@@ -20,13 +20,13 @@ const cropText = (text: string, maxLength: number): string => {
 <template>
   <div>
     <div
-      class="border group px-4 py-6 rounded-md hover:border-black transition-all select-none flex justify-between"
+      class="border group px-4 py-6 rounded-md hover:border-black transition-all select-none flex justify-between overflow-hidden"
     >
       <div class="transition-all" style="width: 83%">
         <h2 class="font-bold uppercase text-xl">{{ news.title }}</h2>
         <hr class="border-1 border-black mt-1 w-full" />
         <div class="mt-2 font-medium">
-          {{ getDateString(news.created_at) }} / {{ getDateString(news.updated_at) }}
+          {{ getDateString(news.updated_at) }} / {{ news.tags.name }}
         </div>
         <p class="break-words mt-3">{{ cropText(news.text, TEXT_MAX_LENGTH) }}</p>
       </div>

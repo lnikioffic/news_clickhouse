@@ -8,13 +8,22 @@ from src.service import Service
 
 
 class NewsService(Service):
-    def get_news(self) -> list[NewsRead]:
-        stmt = text(
-            """
-                SELECT title, text, uuid, created_at, updated_at, tags.uuid, tags.name FROM news_house.news 
-                JOIN news_house.tags ON news.tags_uuid = tags.uuid;
-            """
-        )
+    def get_news(self, uuid_tag) -> list[NewsRead]:
+        if uuid_tag == 'all':
+            stmt = text(
+                """
+                    SELECT title, text, uuid, created_at, updated_at, tags.uuid, tags.name, tags_uuid FROM news_house.news 
+                    JOIN news_house.tags ON news.tags_uuid = tags.uuid;
+                """
+            )
+        else:
+            stmt = text(
+                f"""
+                    SELECT title, text, uuid, created_at, updated_at, tags.uuid, tags.name, tags_uuid FROM news_house.news 
+                    JOIN news_house.tags ON news.tags_uuid = tags.uuid
+                    WHERE news.tags_uuid = '{uuid_tag}';
+                """
+            )
         result: Result = self.session.execute(stmt)
         news_list = []
         res = result.fetchall()
@@ -35,7 +44,8 @@ class NewsService(Service):
 
     def get_news_by_id(self, uuid: str) -> NewsRead:
         stmt = text(
-            f"""SELECT title, text, uuid, created_at, updated_at, tags.uuid, tags.name FROM news_house.news 
+            f"""
+            SELECT title, text, uuid, created_at, updated_at, tags.uuid, tags.name FROM news_house.news 
             JOIN news_house.tags ON news.tags_uuid = tags.uuid
             WHERE news.uuid = '{uuid}'
             """
